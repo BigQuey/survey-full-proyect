@@ -1,0 +1,9 @@
+package com.surservice.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.surservice.models.Question;
+
+public interface QuestionRepository extends JpaRepository<Question, Long>{
+
+}

@@ -1,0 +1,5 @@
+package com.surservice.controller;
+
+public class SurveyController {
+
+}

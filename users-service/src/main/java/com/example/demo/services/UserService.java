@@ -1,0 +1,22 @@
+package com.example.demo.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+
+@Service
+public class UserService extends ICRUDImpl<User, Long>{
+	
+	@Autowired
+	private UserRepository repo;
+	
+	@Override
+	public JpaRepository<User, Long> getRepository() {
+		// TODO Auto-generated method stub
+		return repo;
+	}
+
+}
