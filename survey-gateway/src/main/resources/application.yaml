@@ -8,20 +8,38 @@ spring:
     import: optional:configserver:http://localhost:8888
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
       routes:
         - id: users-service
           uri: lb://users-service
           predicates:
             - Path=/api/users/**
-        - id: surveys-service
-          uri: lb://surveys-service
+        - id: survey-service
+          uri: lb://survey-service
           predicates:
             - Path=/api/surveys/**
-    discovery:
-      locator:
-        enabled: true
+        - id: questions-service
+          uri: lb://question-service
+          predicates:
+            - Path=/api/questions/**
+        - id: responses-service
+          uri: lb://responses-service
+          predicates:
+            - Path=/api/responses/**
+        - id: Reportes-service
+          uri: lb://Reportes-service
+          predicates:
+            - Path=/api/statistics/**
+
+  main:
+    web-application-type: reactive
 
 eureka:
   client:
+    register-with-eureka: true
+    fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka/

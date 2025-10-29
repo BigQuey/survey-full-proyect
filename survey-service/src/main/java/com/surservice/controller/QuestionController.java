@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +23,7 @@ import com.surservice.utils.ApiResponse;
 import com.surservice.utils.ModeloNotFoundException;
 
 @RestController
-@RequestMapping("/quest")
+@RequestMapping("/api/surveys/{surveyId}/questions")
 public class QuestionController {
 	@Autowired
 	private QuestionService servicio;
@@ -39,17 +39,17 @@ public class QuestionController {
 
 	}
 
-	@GetMapping("/find/{codigo}")
-	public ResponseEntity<ApiResponse<?>> findById(@PathVariable("codigo") Long cod) throws Exception {
-		Question bean = servicio.buscarPorId(cod);
-		// validar bean
-		if (bean == null)
-			throw new ModeloNotFoundException("Código : " + cod + " no existe");
-
-		QuestionDTO dtoResponse = mapper.map(bean, QuestionDTO.class);
-		ApiResponse<QuestionDTO> response = new ApiResponse<>(true, "Question existe", dtoResponse);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+//	@GetMapping("/find/{codigo}")
+//	public ResponseEntity<ApiResponse<?>> findById(@PathVariable("codigo") Long cod) throws Exception {
+//		Question bean = servicio.buscarPorId(cod);
+//		// validar bean
+//		if (bean == null)
+//			throw new ModeloNotFoundException("Código : " + cod + " no existe");
+//
+//		QuestionDTO dtoResponse = mapper.map(bean, QuestionDTO.class);
+//		ApiResponse<QuestionDTO> response = new ApiResponse<>(true, "Question existe", dtoResponse);
+//		return new ResponseEntity<>(response, HttpStatus.OK);
+//	}
 
 	@PostMapping("/create")
 	public ResponseEntity<ApiResponse<?>> save(@RequestBody QuestionDTO bean) throws Exception {
@@ -62,18 +62,18 @@ public class QuestionController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update")
-	public ResponseEntity<ApiResponse<?>> update(@RequestBody QuestionDTO bean) throws Exception {
-		Question med = servicio.buscarPorId(bean.getId());
-		if (med == null)
-			throw new ModeloNotFoundException("Código : " + bean.getId() + " no existe");
-
-		Question m = servicio.actualizar(med);
-		QuestionDTO dtoResponse = mapper.map(m, QuestionDTO.class);
-		ApiResponse<QuestionDTO> response = new ApiResponse<>(true, "Question actualizado", dtoResponse);
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+//	@PutMapping("/update")
+//	public ResponseEntity<ApiResponse<?>> update(@RequestBody QuestionDTO bean) throws Exception {
+//		Question med = servicio.buscarPorId(bean.getId());
+//		if (med == null)
+//			throw new ModeloNotFoundException("Código : " + bean.getId() + " no existe");
+//
+//		Question m = servicio.actualizar(med);
+//		QuestionDTO dtoResponse = mapper.map(m, QuestionDTO.class);
+//		ApiResponse<QuestionDTO> response = new ApiResponse<>(true, "Question actualizado", dtoResponse);
+//
+//		return new ResponseEntity<>(response, HttpStatus.OK);
+//	}
 
 	@DeleteMapping("/delete/{codigo}")
 	public ResponseEntity<ApiResponse<?>> deleteById(@PathVariable("codigo") Long cod) throws Exception {

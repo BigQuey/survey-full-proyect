@@ -13,7 +13,7 @@ import com.example.demo.dto.RegisterRequest;
 import com.example.demo.services.AuthService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/users")
 public class AuthController {
 	
 	private final AuthService authService;
@@ -23,13 +23,13 @@ public class AuthController {
 		this.authService = authService;
 	}
 
-	@PostMapping("/register")
+	@PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         String token = authService.register(request);
         return ResponseEntity.ok(Map.of("token", token));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         String token = authService.login(request);
         return ResponseEntity.ok(Map.of("token", token));

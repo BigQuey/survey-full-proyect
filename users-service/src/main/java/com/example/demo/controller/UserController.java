@@ -25,7 +25,7 @@ import com.example.demo.utils.ModeloNotFoundException;
 
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 	@GetMapping("/hello")
 	public String hello() {
@@ -68,17 +68,23 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update")
-	public ResponseEntity<ApiResponse<?>> update(@RequestBody UserDTO bean) throws Exception {
-		User med = servicio.buscarPorId(bean.getId());
-		if (med == null)
-			throw new ModeloNotFoundException("Código : " + bean.getId() + " no existe");
+	@PutMapping("/update/{id}")
+	public ResponseEntity<ApiResponse<?>> update(@PathVariable Long id, @RequestBody UserDTO bean) throws Exception {
+		User userToUpdate = servicio.buscarPorId(id);
+	    if (userToUpdate == null)
+	        throw new ModeloNotFoundException("Código : " + id + " no existe");
 
-		User m = servicio.actualizar(med);
-		UserDTO dtoResponse = mapper.map(m, UserDTO.class);
-		ApiResponse<UserDTO> response = new ApiResponse<>(true, "User actualizado", dtoResponse);
+	    // 3. Actualiza el objeto encontrado con los datos del "bean"
+	    userToUpdate.setName(bean.getName());
+	    userToUpdate.setEmail(bean.getEmail());
+	    userToUpdate.setRole(bean.getRole());
+	    // (No actualices la contraseña aquí a menos que tengas una lógica específica para ello)
 
-		return new ResponseEntity<>(response, HttpStatus.OK);
+	    User updatedUser = servicio.actualizar(userToUpdate);
+	    UserDTO dtoResponse = mapper.map(updatedUser, UserDTO.class);
+	    ApiResponse<UserDTO> response = new ApiResponse<>(true, "User actualizado", dtoResponse);
+
+	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete/{codigo}")
@@ -93,4 +99,8 @@ public class UserController {
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	@GetMapping("/count")
+    public long countUsers() {
+        return servicio.count();
+    }
 }

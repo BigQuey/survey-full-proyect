@@ -1,4 +1,4 @@
-GitRepositoriesView.GitDirectories=/home/bigkey/Documentos/Proyecto/survey-plataform/survey-config-server/.git\:
-GitRepositoriesView.GitDirectories.relative=survey-config-server/.git\:
+GitRepositoriesView.GitDirectories=/home/bigkey/Documentos/Proyecto/survey-plataform/survey-config-server/.git\:/home/bigkey/Documentos/Proyecto/survey-plataform/.git\:
+GitRepositoriesView.GitDirectories.relative=survey-config-server/.git\:.git\:
 core_autoIgnoreDerivedResources=false
 eclipse.preferences.version=1

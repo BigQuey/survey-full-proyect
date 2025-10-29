@@ -1,9 +1,6 @@
 package com.surservice.dto;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SurveyDTO {
 
     private Long id;

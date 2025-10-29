@@ -9,15 +9,13 @@ public class QuestionDTO {
     private String text;
     private String type;
     
-
-    private SurveyDTO survey;
     
-    public QuestionDTO(Long id, String text, String type, SurveyDTO survey) {
+    public QuestionDTO(Long id, String text, String type) {
 		super();
 		this.id = id;
 		this.text = text;
 		this.type = type;
-		this.survey = survey;
+
 	}
     
 	public QuestionDTO() {
@@ -47,13 +45,6 @@ public class QuestionDTO {
 	public void setType(String type) {
 		this.type = type;
 	}
-
-	public SurveyDTO getSurvey() {
-		return survey;
-	}
-
-	public void setSurvey(SurveyDTO survey) {
-		this.survey = survey;
-	} 
+ 
     
 }

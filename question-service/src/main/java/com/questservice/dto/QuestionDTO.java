@@ -1,0 +1,55 @@
+package com.questservice.dto;
+
+public class QuestionDTO {
+
+	private Long id;
+
+	private String text;
+	private String type;
+	private Long surveyId;
+	
+	public QuestionDTO(Long id, String text, String type, Long surveyId) {
+		super();
+		this.id = id;
+		this.text = text;
+		this.type = type;
+		this.surveyId = surveyId;
+	}
+
+	public QuestionDTO() {
+		super();
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Long getSurveyId() {
+		return surveyId;
+	}
+
+	public void setSurveyId(Long surveyId) {
+		this.surveyId = surveyId;
+	}
+	
+}

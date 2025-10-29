@@ -1,6 +1,7 @@
 package com.surservice.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -16,19 +17,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.surservice.dto.QuestionDTO;
 import com.surservice.dto.SurveyDTO;
+import com.surservice.dto.SurveyStatusDTO;
+import com.surservice.dto.SurveyWithQuestionsDTO;
+import com.surservice.feign.ResponseClient;
 import com.surservice.models.Survey;
 import com.surservice.services.SurveyService;
 import com.surservice.utils.ApiResponse;
 import com.surservice.utils.ModeloNotFoundException;
 
 @RestController
-@RequestMapping("/surv")
+@RequestMapping("/api/surveys")
 public class SurveyController {
 	@Autowired
 	private SurveyService servicio;
 	@Autowired
 	private ModelMapper mapper;
+	@Autowired
+	private ResponseClient responseClient;
 	
 	@GetMapping("/list")
 	public ResponseEntity<ApiResponse<?>> findAll() throws Exception {
@@ -62,17 +69,22 @@ public class SurveyController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update")
-	public ResponseEntity<ApiResponse<?>> update(@RequestBody SurveyDTO bean) throws Exception {
-		Survey med = servicio.buscarPorId(bean.getId());
-		if (med == null)
-			throw new ModeloNotFoundException("Código : " + bean.getId() + " no existe");
+	@PutMapping("/update/{id}")
+	public ResponseEntity<ApiResponse<?>> update(@PathVariable Long id, @RequestBody SurveyDTO bean) throws Exception {
+		Survey surveyToUpdate = servicio.buscarPorId(id);
+	    if (surveyToUpdate == null)
+	        throw new ModeloNotFoundException("Código de encuesta: " + id + " no existe");
 
-		Survey m = servicio.actualizar(med);
-		SurveyDTO dtoResponse = mapper.map(m, SurveyDTO.class);
-		ApiResponse<SurveyDTO> response = new ApiResponse<>(true, "Survey actualizado", dtoResponse);
+	    surveyToUpdate.setTitle(bean.getTitle());
+	    surveyToUpdate.setDescription(bean.getDescription());
 
-		return new ResponseEntity<>(response, HttpStatus.OK);
+	    // 4. Guarda la entidad ya actualizada
+	    Survey updatedSurvey = servicio.actualizar(surveyToUpdate);
+
+	    SurveyDTO dtoResponse = mapper.map(updatedSurvey, SurveyDTO.class);
+	    ApiResponse<SurveyDTO> response = new ApiResponse<>(true, "Survey actualizado", dtoResponse);
+
+	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete/{codigo}")
@@ -86,5 +98,43 @@ public class SurveyController {
 		ApiResponse<Void> response = new ApiResponse<>(true, "Survey eliminado", null);
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/questions")
+	public ResponseEntity<ApiResponse<?>> getQuestionsFromQuestionService() {
+		List<QuestionDTO> data = servicio.getAllQuestions();
+	    ApiResponse<List<QuestionDTO>> response = new ApiResponse<>(true, "Listado de preguntas correcto", data);
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@GetMapping("/{surveyId}/details")
+	public ResponseEntity<ApiResponse<SurveyWithQuestionsDTO>> getSurveyDetails(@PathVariable Long surveyId) {
+	    SurveyWithQuestionsDTO data = servicio.getSurveyWithQuestions(surveyId);
+	    ApiResponse<SurveyWithQuestionsDTO> response = new ApiResponse<>(true, "Encuesta con preguntas obtenida", data);
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	@GetMapping("/count")
+    public long countSurveys() {
+        return servicio.count(); 
+    }
+	@GetMapping("/my-list") // Nuevo endpoint para usuarios logueados
+	public ResponseEntity<ApiResponse<?>> getMySurveyList() throws Exception {
+	    // 1. Obtiene los IDs de las encuestas completadas por el usuario actual
+	    Set<Long> completedIds = responseClient.getMyCompletedSurveyIds();
+
+	    // 2. Obtiene todas las encuestas
+	    List<Survey> allSurveys = servicio.listarTodos(); 
+
+	    // 3. Mapea al nuevo DTO, añadiendo el estado 'completedByUser'
+	    List<SurveyStatusDTO> dtoList = allSurveys.stream().map(survey -> 
+	        new SurveyStatusDTO(
+	            survey.getId(),
+	            survey.getTitle(),
+	            survey.getDescription(),
+	            completedIds.contains(survey.getId()) // true si el ID está en el Set
+	        )
+	    ).collect(Collectors.toList());
+
+	    return ResponseEntity.ok(new ApiResponse<>(true, "Lista de encuestas de usuario", dtoList));
 	}
 }

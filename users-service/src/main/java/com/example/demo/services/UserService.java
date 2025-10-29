@@ -18,5 +18,8 @@ public class UserService extends ICRUDImpl<User, Long>{
 		// TODO Auto-generated method stub
 		return repo;
 	}
+	public long count() {
+		return repo.count();
+	}
 
 }

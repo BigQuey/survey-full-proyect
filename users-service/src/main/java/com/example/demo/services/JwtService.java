@@ -10,11 +10,11 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-	private static final String SECRET_KEY = "mysecretkeyforjwttoken12345"; 
+	private static final String SECRET_KEY = "2c4a9e1b8f94e38e4e91b1e2e912d1b8a1f9d3c6b9a2e4f1a9c8e1d3f7b6c4d8"; 
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String email, String role) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .claim("role", role)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24h
@@ -30,9 +30,17 @@ public class JwtService {
                 .getBody()
                 .getSubject();
     }
+    public String extractRole(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
+    }
 
-    public boolean validateToken(String token, String username) {
-        return extractUsername(token).equals(username) && !isTokenExpired(token);
+    public boolean validateToken(String token, String email) {
+        return extractUsername(token).equals(email) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
