@@ -1,16 +1,20 @@
 package com.example.demo.entity;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
+public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -71,5 +75,34 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+	    return List.of(new SimpleGrantedAuthority(role.startsWith("ROLE_") ? role : "ROLE_" + role));
+	}
 
+    @Override
+    public String getUsername() {
+        // El "username" para Spring Security será el email
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // Puedes añadir lógica si tienes cuentas que expiran
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // Puedes añadir lógica para bloquear usuarios
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // Puedes añadir lógica para deshabilitar usuarios
+    }
 }

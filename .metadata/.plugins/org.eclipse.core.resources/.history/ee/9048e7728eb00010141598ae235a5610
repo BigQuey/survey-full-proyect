@@ -1,5 +1,0 @@
-package com.surservice.utils;
-
-public class BusinessException {
-
-}

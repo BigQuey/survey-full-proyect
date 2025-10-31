@@ -1,6 +1,5 @@
 package com.surservice.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -16,7 +15,7 @@ public class Question {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String text;
-	private String type; // Ejemplo: "multiple-choice", "text"
+	private String type;
 
 	@ManyToOne
 	@JoinColumn(name = "survey_id")

@@ -52,7 +52,7 @@
 		<item key="RemoveFinal" value="false"/>
 	</section>
 	<section name="DialogBounds_GetterSetterTreeSelectionDialog">
-		<item key="DIALOG_X_ORIGIN" value="667"/>
+		<item key="DIALOG_X_ORIGIN" value="370"/>
 		<item key="DIALOG_Y_ORIGIN" value="0"/>
 		<item key="DIALOG_WIDTH" value="592"/>
 		<item key="DIALOG_HEIGHT" value="768"/>
@@ -92,5 +92,10 @@
 		<item key="DIALOG_WIDTH" value="619"/>
 		<item key="DIALOG_HEIGHT" value="616"/>
 		<item key="DIALOG_FONT_NAME" value="1|Fira Sans|10.0|0|GTK|1|"/>
+	</section>
+	<section name="JavaSearchPage">
+		<item key="CASE_SENSITIVE" value="false"/>
+		<item key="INCLUDE_MASK" value="15"/>
+		<item key="HISTORY_SIZE" value="0"/>
 	</section>
 </section>

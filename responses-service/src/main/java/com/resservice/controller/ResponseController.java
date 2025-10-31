@@ -75,15 +75,19 @@ public class ResponseController {
     }
     @GetMapping("/my-completed-ids")
     public Set<Long> getMyCompletedSurveyIds(Authentication authentication) {
-        String userEmail = authentication.getName(); 
+    	String userEmail = "usuarioPrueba@gmail.com";
+        System.out.println("Usuario simulado: " + userEmail);
+
         return service.getCompletedSurveyIdsByUser(userEmail);
+    	
     }
     @GetMapping("/by-user-and-survey")
     public ResponseEntity<ApiResponse<List<Response>>> getMyAnswersForSurvey(
             @RequestParam Long surveyId, Authentication authentication) {
-        
-        String userEmail = authentication.getName();
-        List<Response> responses = service.getResponsesByUserAndSurvey(userEmail, surveyId);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Respuestas del usuario", responses));
+    	 String userEmail = "usuarioPrueba@gmail.com";
+
+    	    List<Response> responses = service.getResponsesByUserAndSurvey(userEmail, surveyId);
+    	    return ResponseEntity.ok(new ApiResponse<>(true, "Respuestas del usuario", responses));
+    	
     }
 }

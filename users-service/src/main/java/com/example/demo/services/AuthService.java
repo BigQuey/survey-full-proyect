@@ -15,37 +15,39 @@ public class AuthService {
 	private final UserRepository userRepository;
 	private final JwtService jwtService;
 	private final  PasswordEncoder passwordEncoder;
+	private final UserDetailsService userDetailsService;
 	
-	public AuthService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
+	public AuthService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService ) {
 	    this.userRepository = userRepository;
 	    this.jwtService = jwtService;
 	    this.passwordEncoder = passwordEncoder;
+		this.userDetailsService = userDetailsService;
 	}
 	
 	public String register(RegisterRequest request) {
-		if (userRepository.existsByEmail(request.getEmail())) {
-			throw new RuntimeException("El usuario ya existe");
-		}
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("El usuario ya existe");
+        }
 
-		User user = new User();
-		user.setName(request.getName());
-		user.setEmail(request.getEmail());
-		user.setPassword(passwordEncoder.encode(request.getPassword()));
-		String role = request.getRole() != null ? request.getRole() : "Usuario";
-		user.setRole(role);
-		userRepository.save(user);
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-		return jwtService.generateToken(user.getEmail(), user.getRole());
-	}
+        String role = request.getRole() != null ? request.getRole() : "ROLE_USUARIO";
+        user.setRole(role);
+        userRepository.save(user);
 
-	public String login(LoginRequest request) {
-		User user = userRepository.findByEmail(request.getEmail())
-				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return jwtService.generateToken(user);
+    }
 
-		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-			throw new RuntimeException("Contraseña incorrecta");
-		}
+    public String login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-		return jwtService.generateToken(user.getEmail(), user.getRole());
-	}
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Contraseña incorrecta");
+        }
+        return jwtService.generateToken(user);
+    }
 }
