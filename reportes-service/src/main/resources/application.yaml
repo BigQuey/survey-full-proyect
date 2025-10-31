@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: Reportes-service 
+    name: reportes-service 
   config:
     import: optional:configserver:http://localhost:8888
   autoconfigure:

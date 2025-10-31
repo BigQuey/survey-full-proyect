@@ -30,7 +30,7 @@ spring:
           predicates:
             - Path=/api/responses/**
         - id: Reportes-service
-          uri: lb://Reportes-service
+          uri: lb://reportes-service
           predicates:
             - Path=/api/statistics/**
 
